@@ -11,12 +11,12 @@ using Thinktecture.IdentityModel.Tokens;
 namespace ConcreteAPI.Services
 {
     public class Token : IToken
-    {
-        //###CHANGE: Trocar o _issuer e o Base64Secret antes de enviar.
-        private const string _issuer = "http://localhost:8080";
+    {       
+         private const string _issuer = "http://localhost:8080";
+        //private const string _issuer = "https://concreteapi.azurewebsites.net:443";
         private const string Base64Secret = "IxrAjDoa2FqElO7IhrSrUJELhUckePEPVpaePlS_Xaw";
 
-       public string GenerateToken(User user)
+        public string GenerateToken(User user)
         {
             var ticket = GenerateTicket(user);
 
