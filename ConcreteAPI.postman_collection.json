@@ -1,0 +1,701 @@
+{
+	"info": {
+		"name": "ConcreteAPI",
+		"_postman_id": "3c9885c7-f4d9-26d2-c726-32b9e023c14a",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "SignUp",
+			"description": "",
+			"item": [
+				{
+					"name": "Cadastro com Sucesso",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "bb5aa1f5-b1e8-4f3a-a6fb-75c1514b6d27",
+								"type": "text/javascript",
+								"exec": [
+									"//Verify that the User´s Sign Up was finished with success.",
+									"",
+									"// *** ATENÇÃO ***",
+									"// Verificar se o usuário já foi registrado na base de dados.",
+									"// Caso positivo, apagá-lo da base de dados antes de executar o test.",
+									"",
+									"var expectedName = \"Steve Rogers\";",
+									"var expectedEmail = \"steve.rogers@avengers.com\";",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"pm.test(\"Verify that Response returned Success(2xx)\", function() {",
+									"    pm.response.to.be.success;",
+									"});",
+									"",
+									"pm.test(\"Verify that returnes Status Code was OK(200)\", function() {",
+									"    pm.response.to.be.ok;",
+									"});",
+									"",
+									"pm.test(\"Verify that Name was properly saved\", function(){",
+									"    pm.expect(jsonData.nome).to.eql(expectedName);",
+									"});",
+									"",
+									"pm.test(\"Verify that Email was properly saved\", function(){",
+									"    pm.expect(jsonData.email).to.eql(expectedEmail);",
+									"});",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"nome\": \"Steve Rogers\",\n  \"email\": \"steve.rogers@avengers.com\",\n  \"senha\": \"123456\",\n  \"telefones\": [\n    {\n      \"numero\": \"988887777\",\n      \"ddd\": \"21\"\n    }\n  ]\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/signup",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"signup"
+							]
+						},
+						"description": "Teste de SignUp realizado com sucesso"
+					},
+					"response": []
+				},
+				{
+					"name": "Email já cadastrado",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "5a3cb71c-bb34-4b8b-83da-949a5d6ce5eb",
+								"type": "text/javascript",
+								"exec": [
+									"//Verify if the Login was OK",
+									"",
+									"var expectedStatusCode = 401;",
+									"var expectedMsg = \"Email já existe.\";",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"pm.test(\"Response is Client Error(4xx)\", function() {",
+									"    pm.response.to.be.clientError;",
+									"});",
+									"",
+									"pm.test(\"Verify that returned statusCode is 401\", function(){",
+									"    pm.expect(jsonData.statusCode).to.eql(expectedStatusCode);",
+									"});",
+									"",
+									"pm.test(\"Verify that returned messagem is 'Email já existe'\", function(){",
+									"    pm.expect(jsonData.mensagem).to.eql(expectedMsg);",
+									"});",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"nome\": \"Steve Rogers\",\n  \"email\": \"steve.rogers@avengers.com\",\n  \"senha\": \"123456\",\n  \"telefones\": [\n    {\n      \"numero\": \"988887777\",\n      \"ddd\": \"21\"\n    }\n  ]\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/signup",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"signup"
+							]
+						},
+						"description": "Teste de SignUp. Email já existente na base de dados."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Login",
+			"description": "",
+			"item": [
+				{
+					"name": "Email não cadastrado",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "031aa763-9d9a-44bf-8748-687f4838ffd1",
+								"type": "text/javascript",
+								"exec": [
+									"//Verify if the Email did not exists",
+									"",
+									"var expectedStatusCode = 401;",
+									"var expectedMsg = \"Usuário e/ou senha inválidos.\";",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"pm.test(\"Response is Client Error(4xx)\", function() {",
+									"    pm.response.to.be.clientError;",
+									"});",
+									"",
+									"pm.test(\"Verify that statusCode is 401\", function(){",
+									"    pm.expect(jsonData.statusCode).to.eql(expectedStatusCode);",
+									"});",
+									"",
+									"pm.test(\"Verify that messagem is 'Usuário e/ou senha inválidos'\", function(){",
+									"    pm.expect(jsonData.mensagem).to.eql(expectedMsg);",
+									"});",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"bruce.banner@defenders.com\",\n  \"senha\": \"666666\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"login"
+							]
+						},
+						"description": null
+					},
+					"response": []
+				},
+				{
+					"name": "Email existe mas senha não",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "e3a57904-ca75-4a63-a60f-285942a7a341",
+								"type": "text/javascript",
+								"exec": [
+									"//Verify if the Email exists but wrong password",
+									"",
+									"var expectedStatusCode = 401;",
+									"var expectedMsg = \"Usuário e/ou senha inválidos.\";",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"pm.test(\"Response is Client Error(4xx)\", function() {",
+									"    pm.response.to.be.clientError;",
+									"});",
+									"",
+									"pm.test(\"Verify that statusCode is 401\", function(){",
+									"    pm.expect(jsonData.statusCode).to.eql(expectedStatusCode);",
+									"});",
+									"",
+									"pm.test(\"Verify that messagem is 'Usuário e/ou senha inválidos'\", function(){",
+									"    pm.expect(jsonData.mensagem).to.eql(expectedMsg);",
+									"});",
+									"",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"steve.rogers@avengers.com\",\n  \"senha\": \"123457\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"login"
+							]
+						},
+						"description": null
+					},
+					"response": []
+				},
+				{
+					"name": "Login com sucesso",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "e2d1487f-a3ca-4d49-9ab3-72f74deb00a2",
+								"type": "text/javascript",
+								"exec": [
+									"//Verify if the Login was Successfull",
+									"",
+									"var expectedName = \"Steve Rogers\";",
+									"var expectedEmail = \"steve.rogers@avengers.com\";",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"pm.test(\"Verify that Response returned Success(2xx)\", function() {",
+									"    pm.response.to.be.success;",
+									"});",
+									"",
+									"pm.test(\"Verify that returnes Status Code was OK(200)\", function() {",
+									"    pm.response.to.be.ok;",
+									"});",
+									"",
+									"pm.test(\"Verify that Name was properly returned\", function(){",
+									"    pm.expect(jsonData.nome).to.eql(expectedName);",
+									"});",
+									"",
+									"pm.test(\"Verify that Email was properly returned\", function(){",
+									"    pm.expect(jsonData.email).to.eql(expectedEmail);",
+									"});",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"steve.rogers@avengers.com\",\n  \"senha\": \"123456\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"login"
+							]
+						},
+						"description": null
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Demo",
+			"description": "",
+			"item": [
+				{
+					"name": "Demo",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "http://localhost:8080/api/demo",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"demo"
+							]
+						},
+						"description": null
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Profile1",
+			"description": "",
+			"item": [
+				{
+					"name": "Token não informado.",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3a39f4e1-2f82-49de-be1f-b199425bb353",
+								"type": "text/javascript",
+								"exec": [
+									"//Verify if the Token was not found. Unauthorised.",
+									"",
+									"var expectedStatusCode = 401;",
+									"var expectedMsg = \"Não autorizado.\";",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"pm.test(\"Response is Client Error(4xx)\", function() {",
+									"    pm.response.to.be.clientError;",
+									"});",
+									"",
+									"pm.test(\"Verify that statusCode is 401\", function(){",
+									"    pm.expect(jsonData.statusCode).to.eql(expectedStatusCode);",
+									"});",
+									"",
+									"pm.test(\"Verify that messagem is 'Não autorizado.'\", function(){",
+									"    pm.expect(jsonData.mensagem).to.eql(expectedMsg);",
+									"});",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "http://localhost:8080/api/profile1/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"profile1",
+								"1"
+							]
+						},
+						"description": null
+					},
+					"response": []
+				},
+				{
+					"name": "Token informado mas usuário inexistente",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "60539d4e-9b8b-4241-9133-416cad85629e",
+								"type": "text/javascript",
+								"exec": [
+									"//Verify if the Token was not found. Unauthorised.",
+									"",
+									"var expectedStatusCode = 401;",
+									"var expectedMsg = \"Não autorizado.\";",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"pm.test(\"Response is Client Error(4xx)\", function() {",
+									"    pm.response.to.be.clientError;",
+									"});",
+									"",
+									"pm.test(\"Verify that statusCode is 401\", function(){",
+									"    pm.expect(jsonData.statusCode).to.eql(expectedStatusCode);",
+									"});",
+									"",
+									"pm.test(\"Verify that messagem is 'Não autorizado.'\", function(){",
+									"    pm.expect(jsonData.mensagem).to.eql(expectedMsg);",
+									"});",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJkNmM4YmIxYzhlNzk0MjUzYjY3YjQzNjNlYTVjMDE2MSIsInVuaXF1ZV9uYW1lIjoiU3RldmUgUm9nZXJzIiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwIiwiZXhwIjoxNTE2MTI3NzUzfQ.pM7fA3tprYRa0fPSss4_01SP7Zzfk8eTg8HVU_DBxIo"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "http://localhost:8080/api/profile1/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"profile1",
+								"1"
+							]
+						},
+						"description": null
+					},
+					"response": []
+				},
+				{
+					"name": "Login com sucesso e pega token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "e8f1735b-03e3-45e3-a6e6-cf67d2c9e6ad",
+								"type": "text/javascript",
+								"exec": [
+									"//Verify if the Login was Successfull",
+									"",
+									"var expectedName = \"Steve Rogers\";",
+									"var expectedEmail = \"steve.rogers@avengers.com\";",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"pm.test(\"Verify that Response returned Success(2xx)\", function() {",
+									"    pm.response.to.be.success;",
+									"});",
+									"",
+									"pm.test(\"Verify that returnes Status Code was OK(200)\", function() {",
+									"    pm.response.to.be.ok;",
+									"});",
+									"",
+									"var token = jsonData.token;",
+									"console.log(token);",
+									"var id = jsonData.id;",
+									"console.log(id)",
+									"",
+									"pm.globals.set(\"session_token\", token);",
+									"pm.globals.set(\"user_id\", id);",
+									"",
+									"//postman.setNextRequest(\"Token diferente\");",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"steve.rogers@avengers.com\",\n  \"senha\": \"123456\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"login"
+							]
+						},
+						"description": null
+					},
+					"response": []
+				},
+				{
+					"name": "Token diferente",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "f08735b3-5057-4783-b3ad-aaa771a93deb",
+								"type": "text/javascript",
+								"exec": [
+									"//Verify if the Token was not found. Unauthorised.",
+									"",
+									"var expectedStatusCode = 401;",
+									"var expectedMsg = \"Não autorizado.\";",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"pm.test(\"Response is Client Error(4xx)\", function() {",
+									"    pm.response.to.be.clientError;",
+									"});",
+									"",
+									"pm.test(\"Verify that statusCode is 401\", function(){",
+									"    pm.expect(jsonData.statusCode).to.eql(expectedStatusCode);",
+									"});",
+									"",
+									"pm.test(\"Verify that messagem is 'Não autorizado.'\", function(){",
+									"    pm.expect(jsonData.mensagem).to.eql(expectedMsg);",
+									"});"
+								]
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "b0ad7fbb-af8f-4a1f-a00c-da211a6e4709",
+								"type": "text/javascript",
+								"exec": [
+									"var token = pm.globals.get(\"session_token\");",
+									"//var id = pm.globals.get(\"user_id\");",
+									"//console.log(id);",
+									"",
+									"//pm.request.url = \"http://localhost:8080/api/profile1/?\" + id;",
+									"//console.log(pm.request.url);",
+									"",
+									"var bearerToken =\"Bearer \" + token;",
+									"pm.globals.set(\"Authorization\", bearerToken);",
+									"//console.log(pm.Authorization);",
+									"",
+									"//pm.sendRequest(pm.request.url, function (err, response) {",
+									"//    console.log(response.json());",
+									"//});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJkNmM4YmIxYzhlNzk0MjUzYjY3YjQzNjNlYTVjMDE2MSIsInVuaXF1ZV9uYW1lIjoiU3RldmUgUm9nZXJzIiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwIiwiZXhwIjoxNTE2MTMyNjMzfQ.NYbNgCWU8xpXChGUgag9P-WuliANswZVLaNs8_2rkk1"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/profile1/d6c8bb1c-8e79-4253-b67b-4363ea5c0161",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"profile1",
+								"d6c8bb1c-8e79-4253-b67b-4363ea5c0161"
+							]
+						},
+						"description": "Executar o teste 'Login com sucesso e pega token' e atualizar o Id do usuário e o Token com o valor do teste. Alterar o token em um caracter."
+					},
+					"response": []
+				},
+				{
+					"name": "Profile1 Success",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "37202bd7-1ece-4c47-b61c-b808be998d2a",
+								"type": "text/javascript",
+								"exec": [
+									"//Verify if the Token was not found. Unauthorised.",
+									"",
+									"var expectedName = \"Steve Rogers\";",
+									"var expectedEmail = \"steve.rogers@avengers.com\";",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"pm.test(\"Verify that Response returned Success(2xx)\", function() {",
+									"    pm.response.to.be.success;",
+									"});",
+									"",
+									"pm.test(\"Verify that returnes Status Code was OK(200)\", function() {",
+									"    pm.response.to.be.ok;",
+									"});",
+									"",
+									"pm.test(\"Verify that Name was properly returned\", function(){",
+									"    pm.expect(jsonData.nome).to.eql(expectedName);",
+									"});",
+									"",
+									"pm.test(\"Verify that Email was properly returned\", function(){",
+									"    pm.expect(jsonData.email).to.eql(expectedEmail);",
+									"});"
+								]
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "1c6fac64-c7db-4230-a27f-3ee8b1e0cd4f",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiZGUyMTg0YTFkZjA0OWNmOTg0NTY3Y2NlYmFlNmI5NSIsInVuaXF1ZV9uYW1lIjoiU3RldmUgUm9nZXJzIiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwIiwiZXhwIjoxNTE2MjE5MjAxfQ.FIh06jVm2iiIiFIsjrwlp9cMu5UGMlyZVohC3v_RhpY"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/profile1/bde2184a-1df0-49cf-9845-67ccebae6b95",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"profile1",
+								"bde2184a-1df0-49cf-9845-67ccebae6b95"
+							]
+						},
+						"description": "Executar o teste 'Login com sucesso e pega token' e atualizar o Id do usuário e o Token com o valor do teste."
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
